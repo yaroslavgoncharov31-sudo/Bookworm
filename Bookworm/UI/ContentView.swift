@@ -1,17 +1,30 @@
 import SwiftUI
-import Playgrounds
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) var modelContext
+    @Query var books: [Book]
+
+    @State private var showingAddScreen = false
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationStack {
+            Text("Count: \(books.count)")
+                .navigationTitle("Bookworm")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add Book", systemImage: "plus") {
+                            showingAddScreen.toggle()
+                        }
+                    }
+                }
+                .sheet(isPresented: $showingAddScreen) {
+                    AddBookView()
+                }
+        }
     }
 }
 
 #Preview {
     ContentView()
-}
-
-#Playground {
-    _ = 1 + 2
 }
