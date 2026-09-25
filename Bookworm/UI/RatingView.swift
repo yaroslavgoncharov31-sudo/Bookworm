@@ -14,17 +14,21 @@ struct RatingView: View {
     var offColor = Color.gray
     var onColor = Color.yellow
 
+    @State private var bounceCounter: [Int: Int] = [:]
     var body: some View {
         HStack {
-        if label.isEmpty == false {
+        if !label.isEmpty {
             Text(label)
         }
             ForEach(1..<maximumRating + 1, id: \.self) { number in
                 Button {
                     rating = number
+                    bounceCounter[number, default: 0] += 1
                 } label: {
                     (number > rating ? (offImage ?? onImage) : onImage)
                         .foregroundStyle(number > rating ? offColor : onColor)
+                        .symbolEffect(.bounce, value: bounceCounter[number, default: 0])
+                        .sensoryFeedback(.selection, trigger: bounceCounter)
                 }
             }
         }
